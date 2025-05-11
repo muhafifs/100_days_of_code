@@ -1,0 +1,77 @@
+import random
+import os
+from art import logo, vs
+from game_data import data
+
+def random_pick(database: list) -> dict:
+    pick = random.choice(database)
+    return pick
+
+def choice(choice_a: dict, choice_b: dict, user_choice: str):
+    if choice_a["follower_count"] > choice_b["follower_count"] and user_choice == "a":
+        return True
+    elif choice_a["follower_count"] < choice_b["follower_count"] and user_choice == "b":
+        return True
+    return False
+
+
+def comparison_display(entity_a: dict, entity_b: dict) -> None:
+    name_a = entity_a["name"]
+    desc_a = entity_a["description"]
+    country_a = entity_a["country"]
+    name_b = entity_b["name"]
+    desc_b = entity_b["description"]
+    country_b = entity_b["country"]
+    print(f"Compare A: {name_a}, a {desc_a}, from {country_a}.")
+    print(vs)
+    print(f"Against B: {name_b}, a {desc_b}, from {country_b}.")
+
+
+def main():
+    game_over = False
+    score = 0
+    correct_answer = ""
+    counter = 0
+    while not game_over:
+        # print logo at the start of every loop so it's always at the top
+        print(logo)
+        pick_a = random_pick(data)
+        pick_b = random_pick(data)
+
+        if score != 0:
+            pick_a = correct_answer
+            while pick_b == pick_a:
+                pick_b = random_pick(data)
+            print(f"You're right current score = {score}")
+
+        comparison_display(pick_a, pick_b)
+        # ask for user input about his choice of the two
+        ask = input("Who has more followers? Type 'A' or 'B: ").strip().lower()
+        # check if user answer is correct or wrong, either add score or end the game
+        answer_checking = choice(pick_a, pick_b, ask)
+        if answer_checking:
+            score += 1
+            counter += 1
+
+            if ask == "a":
+                correct_answer = pick_a
+                if counter == 2:
+                    correct_answer = pick_b
+                    counter = 0
+            else:
+                correct_answer = pick_b
+                if counter == 2:
+                    counter = 0
+        else:
+            game_over = True
+        # clear screen for each loop
+        os.system('cls' if os.name == 'nt' else 'clear')
+
+    # choice is incorrect, clear screen and show final score.
+    os.system('cls' if os.name == 'nt' else 'clear')
+    print(logo)
+    print(f"Sorry, that's wrong. Final score: {score}")
+
+
+if __name__ == "__main__":
+    main()

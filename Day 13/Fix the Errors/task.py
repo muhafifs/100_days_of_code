@@ -1,0 +1,7 @@
+
+try:
+    age = int(input("How old are you?"))
+except ValueError:
+    print("Type in number format")
+if age > 18:
+    print(f"You can drive at age {age}.")

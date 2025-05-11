@@ -1,0 +1,7 @@
+def greet(name):
+    print(f"hai {name}")
+    print("afif")
+    print("afif")
+
+
+greet("afif")

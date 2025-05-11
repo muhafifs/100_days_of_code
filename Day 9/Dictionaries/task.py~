@@ -1,0 +1,26 @@
+programming_dictionary = {"Bug": "An error in a program that prevents the program from running as expected.", "Function": "A piece of code that you can easily call over and over again."}
+
+
+# this is how you access a value
+print(programming_dictionary["Bug"])
+
+# and this is how you can ada a new entry into a dict
+
+programming_dictionary["Shiro"] = "Kamu Jelek"
+
+print(programming_dictionary)
+
+
+## this is how you create an empty dictionary
+
+# collection_of_bools = {}
+#
+# # this is how you wipe dictionary
+#
+# programming_dictionary = {}
+
+
+programming_dictionary["Bug"] = "Nama Saya"
+
+print(programming_dictionary)
+
