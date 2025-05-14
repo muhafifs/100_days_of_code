@@ -1,5 +1,4 @@
 import sys
-
 MENU = {
     "espresso": {
         "ingredients": {
@@ -25,41 +24,81 @@ MENU = {
         "cost": 3.0,
     }
 }
-
 resources = {
-    "Water": 300,
-    "Milk": 200,
-    "Coffee": 100,
-    "Money": 0,
+    "water": 300,
+    "milk": 200,
+    "coffee": 100,
+    "money": 0,
 }
 
-coin = {
-    "penny": 0.01,
-    "nickel": 0.05,
-    "dime": 0.10,
-    "quarter": 0.25,
-}
-# TODO 1: Ask for user input about coffee choice
-operate = False
-while not operate:
-    order = input("What would you like? (espresso/latte/cappuccino): ").strip().lower()
-    # Turning off machine with command from maintainer
-    if order == "off":
-        sys.exit("Turning off")
-    elif order == "report":
-        # printing resources but adjusting for
-        for resource in resources:
-            if resource == "Water" or resource == "Milk":
-                print(f"{resource}: {resources[resource]}ml")
-            elif resource == "Coffee":
-                print(f"{resource}: {resources[resource]}g")
-            else:
-                print(f"{resource}: ${resources[resource]}")
+def resource_checking(choice: str) -> str | bool:
+    checking = MENU[choice]
+    your_order = checking["ingredients"]
+    for source in your_order:
+        if source in resources:
+            if your_order[source] > resources[source]:
+                print(f"Sorry there is not enough {source}")
+                return False
+    return True
 
-    if order == "report":
-        continue
+def deduction(choice: str) -> None:
+    checking = MENU[choice]
+    your_order = checking["ingredients"]
+    for source in your_order:
+        if source in resources:
+            resources[source] -= your_order[source]
 
-    for check_resource in MENU:
-        if
 
+def transaction(choice: str, quarter: int, dimes: int, nickles: int, pennies: int) -> bool:
+    total = quarter * 0.25 + dimes * 0.10 + nickles * 0.05 + pennies * 0.01
+    if total < MENU[choice]["cost"]:
+        return False
+    else:
+        resources["money"] += MENU[choice]["cost"]
+        change = total - MENU[choice]["cost"]
+        print(f"Here's your change ${change:.2f}")
+        return True
+
+
+def main():
+    # TODO 1: Ask for user input about coffee choice
+    operate = False
+    while not operate:
+        order = input("What would you like? (espresso/latte/cappuccino): ").strip().lower()
+        # Turning off machine with command from maintainer
+
+        if order == "off":
+            sys.exit("Turning off")
+        elif order == "report":
+            for resource in resources:
+                if resource == "water" or resource == "milk":
+                    print(f"{resource.title()}: {resources[resource]}ml")
+                elif resource == "coffee":
+                    print(f"{resource.title()}: {resources[resource]}g")
+                else:
+                    print(f"{resource.title()}: ${resources[resource]:.2f}")
+            continue
+        elif order not in ["espresso", "latte", "cappuccino"]:
+            print("Sorry that's not on the menu 😫")
+            continue
+
+        check_resource = resource_checking(order)
+        if check_resource:
+            deduction(order)
+        else:
+            continue
+
+        print("Please insert coins.")
+        quarter = int(input("How many quarters?: "))
+        dimes = int(input("How many dimes?: "))
+        nickles = int(input("How many nickles?: "))
+        pennies = int(input("How many pennies?: "))
+        payment = transaction(order, quarter, dimes, nickles, pennies)
+
+        if payment:
+            print(f"Enjoy your {order}☕")
+        else:
+            print("Sorry you don't have enough money.")
+
+main()
 
